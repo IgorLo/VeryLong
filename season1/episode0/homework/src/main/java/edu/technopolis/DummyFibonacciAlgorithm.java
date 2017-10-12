@@ -15,7 +15,7 @@ public class DummyFibonacciAlgorithm implements FibonacciAlgorithm {
             result = one.add(two);
             one = two;
             two = result;
-            System.out.println(i + 1);
+            //System.out.println(i + 1);
         }
         return result.toString();
     }

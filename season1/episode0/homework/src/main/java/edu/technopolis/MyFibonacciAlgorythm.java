@@ -15,6 +15,7 @@ public class MyFibonacciAlgorythm implements FibonacciAlgorithm {
             result = VeryLong.getSum(one, two);
             one.set(two);
             two.set(result);
+            //System.out.println(result.toString());
         }
         return result.toString();
     }

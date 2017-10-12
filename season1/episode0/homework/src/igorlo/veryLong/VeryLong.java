@@ -63,12 +63,12 @@ public class VeryLong {
     }
 
     public static VeryLong getSum(VeryLong one, VeryLong other) {
-        VeryLong sum = new VeryLong(0L);
+        VeryLong sum = new VeryLong();
         sum.set(one);
         int i = 0;
         while (other.longs[i] != null && i < sum.longs.length) {
             if (sum.longs[i] < 0 && other.longs[i] < 0) {
-                sum.longs[i] += other.longs[i] + Long.MAX_VALUE + 1;
+                sum.longs[i] += other.longs[i] + 1;// + Long.MAX_VALUE + 1;
                 if (sum.longs[i + 1] == null) {
                     sum.longs[i + 1] = 1L;
                 } else {
@@ -81,7 +81,7 @@ public class VeryLong {
                     boolean signAfter = sum.longs[i] < 0;
                     if (signAfter == signBefore) {
                         if (sum.longs[i + 1] == null) {
-                            sum.longs[i] += Long.MAX_VALUE + 1;
+                            //sum.longs[i] += Long.MAX_VALUE + 1;
                             sum.longs[i + 1] = 1L;
                         } else {
                             sum.longs[i + 1]++;
@@ -151,10 +151,13 @@ public class VeryLong {
         for (int i = longs.length - 1; i >= 0; i--) {
             Long currentLong = longs[i];
             if (currentLong != null) {
-                //big = big.multiply(new BigInteger(Long.toString((long) (Math.pow(2d, 63d)))));
-                big = big.multiply(new BigInteger(Long.toString(Long.MAX_VALUE)));
+                //BigInteger multiplier = new BigInteger(Long.toString(Long.MAX_VALUE));
+                //multiplier = multiplier.add(new BigInteger("1"));
+                big = big.multiply(new BigInteger(Long.toString((long) (Math.pow(2, 62)))));
+                //big = big.multiply(new BigInteger(Long.toString(Long.MAX_VALUE)));
+                //big = big.multiply(multiplier);
                 if (currentLong < 0) {
-                    big = big.add(new BigInteger(Long.toString(currentLong - Long.MAX_VALUE)));
+                    big = big.add(new BigInteger(Long.toString(currentLong + Long.MAX_VALUE + 2)));
                     big = big.add(new BigInteger(Long.toString(Long.MAX_VALUE)));
                 } else {
                     big = big.add(new BigInteger(Long.toString(currentLong)));
