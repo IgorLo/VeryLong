@@ -2,9 +2,6 @@ package main.java.edu.technopolis;
 
 import java.math.BigInteger;
 
-/**
- * Это <b>неправильный</b> с точки зрения задания алгоритм.
- */
 public class DummyFibonacciAlgorithm implements FibonacciAlgorithm {
     @Override
     public String evaluate(int index) {
@@ -18,6 +15,7 @@ public class DummyFibonacciAlgorithm implements FibonacciAlgorithm {
             result = one.add(two);
             one = two;
             two = result;
+            System.out.println(i + 1);
         }
         return result.toString();
     }
