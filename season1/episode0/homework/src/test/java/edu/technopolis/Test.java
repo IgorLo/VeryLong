@@ -22,9 +22,9 @@ public class Test {
         checkThat("5".equals(algorithm.evaluate(5)), "Incorrect value for 5");
         //System.out.println(algorithm.evaluate(100));
         //System.out.println(Long.MAX_VALUE);
-        System.out.println(algorithm.evaluate(100));
+        //System.out.println(algorithm.evaluate(100));
         checkThat("354224848179261915075".equals(algorithm.evaluate(100)), "Incorrect value for 100");
-        //checkThat(FIB_300_K.equals(algorithm.evaluate(300000)), "Incorrect value for 3000000");
+        checkThat(FIB_300_K.equals(algorithm.evaluate(300000)), "Incorrect value for 3000000");
         System.out.println("SUCCESS!");
     }
 

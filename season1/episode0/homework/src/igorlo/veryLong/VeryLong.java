@@ -9,12 +9,12 @@ public class VeryLong {
 
     private Long[] longs;
 
-    public final static int DEFAULT_CAPACITY = 5;
+    public final static int DEFAULT_CAPACITY = 16;
 
     public VeryLong() {
         longs = new Long[DEFAULT_CAPACITY];
         for (int i = 0; i < DEFAULT_CAPACITY; i++) {
-            longs[i] = null;
+            longs[i] = 0L;
         }
     }
 
@@ -22,17 +22,24 @@ public class VeryLong {
         longs = new Long[DEFAULT_CAPACITY];
         longs[0] = number;
         for (int i = 1; i < DEFAULT_CAPACITY; i++) {
-            longs[i] = null;
+            longs[i] = 0L;
         }
     }
 
     public VeryLong(int capacity) {
         longs = new Long[capacity];
         for (int i = 0; i < capacity; i++) {
-            longs[i] = null;
+            longs[i] = 0L;
         }
     }
 
+    public VeryLong(int capacity, long number) {
+        longs = new Long[capacity];
+        longs[0] = number;
+        for (int i = 1; i < capacity; i++) {
+            longs[i] = 0L;
+        }
+    }
 
     public String getBinaryRepresentation() {
         StringBuilder sb = new StringBuilder();
@@ -63,45 +70,45 @@ public class VeryLong {
     }
 
     public static VeryLong getSum(VeryLong one, VeryLong other) {
-        VeryLong sum = new VeryLong();
+        VeryLong sum = new VeryLong(one.longs.length);
         sum.set(one);
-        int i = 0;
-        while (other.longs[i] != null && i < sum.longs.length) {
-            if (sum.longs[i] < 0 && other.longs[i] < 0) {
-                sum.longs[i] += other.longs[i] + 1;// + Long.MAX_VALUE + 1;
-                if (sum.longs[i + 1] == null) {
-                    sum.longs[i + 1] = 1L;
-                } else {
-                    sum.longs[i + 1]++;
-                }
-            } else {
-                if (sum.longs[i] < 0 || other.longs[i] < 0) {
-                    boolean signBefore = sum.longs[i] < 0;
-                    sum.longs[i] += other.longs[i] + 1;
-                    boolean signAfter = sum.longs[i] < 0;
-                    if (signAfter == signBefore) {
-                        if (sum.longs[i + 1] == null) {
-                            //sum.longs[i] += Long.MAX_VALUE + 1;
-                            sum.longs[i + 1] = 1L;
-                        } else {
-                            sum.longs[i + 1]++;
-                        }
-                    }
-                } else {
-                    sum.longs[i] += other.longs[i];
-                }
-            }
-
-            i++;
-        }
+        sum.add(other);
         return sum;
     }
 
+    private boolean sumLongs(VeryLong other, int index, boolean prevOverflow){
+        boolean newOverflow = false;
+
+        long numberOne = longs[index];
+        long numberTwo = other.longs[index];
+        if (prevOverflow)
+            numberTwo++; //DANGEROUS AND MYSTERIOUS PLACE
+
+        if (numberOne < 0 && numberTwo < 0){
+            newOverflow = true;
+        } else {
+            if ((numberOne < 0 || numberTwo < 0) && (numberOne + numberTwo > 0)){
+                newOverflow = true;
+            }
+        }
+
+        longs[index] += numberTwo;
+        return newOverflow;
+    }
+
     public void add(VeryLong other) {
+
+        boolean overflow = sumLongs(other, 0, false);
+
+        for (int i = 1; i < longs.length; i++){
+            overflow = sumLongs(other, i, overflow);
+        }
+
+        /*
         int i = 0;
         while (other.longs[i] != null && i < longs.length) {
-            if (this.longs[i] < 0 && other.longs[i] < 0) {
-                this.longs[i] += other.longs[i] + Long.MAX_VALUE + 1;
+            if (longs[i] < 0 && other.longs[i] < 0) {
+                longs[i] += other.longs[i] + Long.MAX_VALUE + 1;
                 if (this.longs[i + 1] == null) {
                     this.longs[i + 1] = 1L;
                 } else {
@@ -126,7 +133,8 @@ public class VeryLong {
             }
 
             i++;
-        }
+        ]
+        */
     }
 
     public void add(long other) {
@@ -135,14 +143,10 @@ public class VeryLong {
     public void add(int other) {
     }
 
-    public VeryLong set(VeryLong other) {
-        VeryLong result = new VeryLong(0L);
-        for (int i = 0; i < longs.length; i++) {
-            if (other.longs[i] == null)
-                break;
-            longs[i] = other.longs[i].longValue();
+    public void set(VeryLong other) {
+        for (int i = 0; i < this.longs.length; i++) {
+            setLong(other.longs[i], i);
         }
-        return result;
     }
 
     @Override
@@ -151,11 +155,7 @@ public class VeryLong {
         for (int i = longs.length - 1; i >= 0; i--) {
             Long currentLong = longs[i];
             if (currentLong != null) {
-                //BigInteger multiplier = new BigInteger(Long.toString(Long.MAX_VALUE));
-                //multiplier = multiplier.add(new BigInteger("1"));
-                big = big.multiply(new BigInteger(Long.toString((long) (Math.pow(2, 62)))));
-                //big = big.multiply(new BigInteger(Long.toString(Long.MAX_VALUE)));
-                //big = big.multiply(multiplier);
+                big = big.multiply(new BigInteger("18446744073709551616"));
                 if (currentLong < 0) {
                     big = big.add(new BigInteger(Long.toString(currentLong + Long.MAX_VALUE + 2)));
                     big = big.add(new BigInteger(Long.toString(Long.MAX_VALUE)));
@@ -165,6 +165,10 @@ public class VeryLong {
             }
         }
         return big.toString();
+    }
+
+    private void setLong(long newLong, int index){
+        this.longs[index] = newLong;
     }
 
     public Long[] getLongs() {

@@ -8,14 +8,13 @@ public class MyFibonacciAlgorythm implements FibonacciAlgorithm {
         if (index < 3) {
             return "1";
         }
-        VeryLong one = new VeryLong(1L);
-        VeryLong two = new VeryLong(1L);
-        VeryLong result = new VeryLong(1L);
+        VeryLong one = new VeryLong(4000, 1L);
+        VeryLong two = new VeryLong(4000, 1L);
+        VeryLong result = new VeryLong(4000, 1L);
         for (int i = 2; i < index; i++) {
             result = VeryLong.getSum(one, two);
             one.set(two);
             two.set(result);
-            //System.out.println(result.toString());
         }
         return result.toString();
     }

@@ -44,34 +44,36 @@ public class Test {
 
     private static void lookForTroubles() {
 
-        long step = 1;
+        long startValue = 1;
 
-        BigInteger big = new BigInteger("0");
-        VeryLong veryLong = new VeryLong(0l);
+        BigInteger big = new BigInteger(Long.toString(startValue));
+        VeryLong veryLong = new VeryLong(startValue);
 
-        BigInteger stepBig = new BigInteger(Long.toString(step));
-        VeryLong stepLong = new VeryLong(step);
+        BigInteger stepBig;
+        VeryLong stepLong = new VeryLong();
 
         boolean foundTrouble = false;
         int count = 0;
 
-        big = big.add(stepBig);
-        veryLong.add(stepLong);
         while (!foundTrouble){
             count++;
-            big = big.add(big);
-            veryLong.add(veryLong);
+            stepBig = big;
+            big = big.add(stepBig);
+            stepLong.set(veryLong);
+            veryLong.add(stepLong);
             String bigStr = big.toString();
             String veryStr = veryLong.toString();
             if (bigStr.equals(veryStr)){
-                System.out.println("Success: " + bigStr);
+                System.out.println("OK with 2^" + count + ": " + bigStr);
             } else {
-                System.out.println("Trouble in: " + bigStr);
-                System.out.println("You said: " + veryStr);
-                System.out.println("Step: " + count);
-                System.out.println("-----------------------");
-                System.out.println("Long MAX: " + Long.toString(Long.MAX_VALUE));
-                System.out.println("Long MIN: " + Long.toString(Long.MIN_VALUE));
+                System.out.println("-----------|-----------");
+                System.out.println("Trouble in:|" + bigStr);
+                System.out.println("You said:  |" + veryStr);
+                System.out.println("Power of 2:|" + count);
+                System.out.println("-----------|-----------");
+                System.out.println("Long MAX:  |" + Long.toString(Long.MAX_VALUE));
+                System.out.println("Long MIN:  |" + Long.toString(Long.MIN_VALUE));
+                System.out.println("-----------|-----------");
                 foundTrouble = true;
             }
         }
